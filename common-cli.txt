@@ -1,0 +1,82 @@
+# 1. Ket noi database
+sqlplus sys as sysdba
+
+# 2. Tao user moi
+$ create user new_thanhtu identified by 123;
+$ SELECT default_tablespace, temporary_tablespace FROM dba_users WHERE username='NEW_THANHTU';
+
+# 3. Gan quyen dang nhap cho user
+$ GRANT CREATE SESSION TO new_thanhtu; (grant connect to new_thanhtu;)
+
+# 4. Dang nhap
+$ connect new_thanhtu/123;
+
+# 5. Gan quyen dung luong truoc khi tao bang (co the gioi han hay ko gioi han)
+$ ALTER USER new_thanhtu QUOTA 100M | UNLIMITED ON users;
+
+# 6. Gan quyen tao bang
+$ GRANT CREATE TABLE TO new_thanhtu;
+
+# 7. Tao bang
+$ CREATE TABLE tu (name varchar2(30)) tablespace users;
+
+# 8. Gan dung luong khong gioi han lien quan den tat ca tablespace (default_tablespace, temporary_tablespace)
+$ GRANT UNLIMITED TABLESPACE TO new_thanhtu;
+
+# 9. Xem cac thong tin ve quota da gan cho cac user
+$ SELECT tablespace_name, username, bytes FROM DBA_TS_QUOTAS;
+
+# 10. Tao user va gan dung luong cung luc
+$ CREATE USER new_thanhtu_new IDENTIFIED BY 123 DEFAULT TABLESPACE USERS QUOTA 500M ON USERS;
+
+# 11. Doi mat khau
+$ alter user new_thanhtu identified by 1234;
+
+# 12. Thiet lap het han mat khau
+$ alter user new_thanhtu identified by 1234 password expire;
+
+# 13. khoa tai khoan va mo khoa         
+$ alter user new_thanhtu ACCOUNT LOCK;
+$ alter user new_thanhtu ACCOUNT UNLOCK;
+
+# 14. Xoa tai khoan
+$ drop user new_thanhtu cascade;
+
+# 15. Lay danh sach nguoi dung
+$ select username, account_status from dba_users;
+
+# 16. Tao profile "password" thoa cac dieu kien sau:
+$ create profile password limit FAILED_LOGIN_ATTEMPTS 3;
+$ create profile password limit PASSWORD_LIFE_TIME 60;
+$ create profile password limit PASSWORD_GRACE_TIME 10;
+$ create profile password limit PASSWORD_REUSE_MAX 5;
+$ create profile password limit PASSWORD_REUSE_TIME 1;
+
+# 17. Thay doi lai cau hinh de co the su dung lai mat khau truoc do
+$ alter profile password limit PASSWORD_REUSE_TIME UNLIMITED;
+$ alter profile password limit PASSWORD_REUSE_MAX UNLIMITED;
+
+# 18. Tao quyen
+$ create role '$tenQuyen';
+
+# 19. Gan quyen cho user
+$ grant '$tenQuyen' to '$tenUser';
+
+# 20. Gan quyen chi dinh thuc thi 'select, insert, update, delete' doi voi tung bang du lieu cho tung loai user
+$ grant '$thucThi' on '$tenBang' to '$tenQuyen';
+
+- vi du chi co insert va update:
+$ grant select, insert, update on '$tenBang' to '$tenQuyen';
+
+- vi du chi co update 1 cot:
+$ grant update('$tenCot') on '$tenBang' to '$tenUser';
+
+# 21. Xoa du lieu doi voi 1 bang
+$ delete from '$tenBang';
+
+# 22. Cap nhat data
+$ update '$tenBang' set '$tenCot' = '$giaTri'
+
+# 23. Truy van 
+$ select distinct(privilege) from DBA_SYS_PRIVS where privilege LIKE '%CONTEXT%';
+$ select distinct(Grantee) from DBA_SYS_PRIVS where privilege LIKE '%SELECT ANY TABLE%';

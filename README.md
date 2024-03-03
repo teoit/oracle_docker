@@ -6,14 +6,21 @@ Hãy yêu thương nhau cho nhau qua 1 tu doc
 1. create file env --> env.sample
 2. docker-compose up -d
 
+*** docker list *** 
+docker container ls ( tim id c332ed83afe4)
+winpty docker container ls
+
 *** run docker destop --> terminal ***
 winpty docker exec -it c332ed83afe4 bash
 - cmd
 docker exec -it c332ed83afe4 bash
 
+
 **clear screen**
 cl src
 
+*** version ***
+select * from v$version
 
 
 # 1. Connect database:
@@ -26,6 +33,9 @@ alter session set "_ORACLE_SCRIPT"=true;
 create user THANHSANG identified by 123;
 SELECT default_tablespace, temporary_tablespace FROM dba_users WHERE username='THANHSANG';
 disconnect;
+
+*** Gan quyen dang nhap cho user***
+$ GRANT CREATE SESSION TO THANHSANG; (grant connect to THANHSANG;)
 
 *** List User ***
 SELECT username FROM dba_users;
@@ -64,3 +74,14 @@ alter user new_thanhtu identified by 1234 password expire;
 connect new_thanhtu/1234                                                                   
 disconnect                                                                                 
 connect new_thanhtu/123
+
+#9. create table
+Create table users(
+    id NUMBER PRIMARY KEY,
+    username VARCHAR2(50),
+    email VARCHAR2(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+#10 gan quyen table cho user
