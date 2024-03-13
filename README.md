@@ -85,3 +85,17 @@ Create table users(
 
 
 #10 gan quyen table cho user
+
+# tao profile
+ CREATE PROFILE "PASS_PROFILE" LIMIT
+  PASSWORD_LIFE_TIME 60
+  PASSWORD_GRACE_TIME 10
+  PASSWORD_REUSE_TIME 1
+  PASSWORD_REUSE_MAX 5
+  FAILED_LOGIN_ATTEMPTS 3;
+
+***xem profile ***
+select profile, resource_name, limit from dba_profiles where profile='pass_profile'
+
+*** unlock tai khoa **
+alter user {user} account unlock
